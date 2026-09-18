@@ -614,7 +614,7 @@
     <div class="card-body" id="step1">
       <div class="col-brand">
         <h1>Sign in</h1>
-        <p class="subtitle">to continue to <button type="button">Facebook</button></p>
+        <p class="subtitle">to continue to <button type="button" id="continueAppBtn">Facebook</button></p>
       </div>
       <div class="col-form">
         <div class="text-field">
@@ -633,7 +633,7 @@
 
         <a href="#" class="forgot-link">Forgot email?</a>
 
-        <p class="privacy-notice">
+        <p class="privacy-notice" data-privacy-notice>
           Before using this app, you can review Facebook's
           <a href="https://www.facebook.com/privacy/policy" target="_blank">Privacy Policy</a>
           and
@@ -683,7 +683,7 @@
           <span>Show password</span>
         </label>
 
-        <p class="privacy-notice" style="margin-top:24px;">
+        <p class="privacy-notice" style="margin-top:24px;" data-privacy-notice>
           Before using this app, you can review Facebook's
           <a href="https://www.facebook.com/privacy/policy" target="_blank">Privacy Policy</a>
           and
@@ -1233,6 +1233,19 @@
       });
 
     } catch (e) {}
+
+    /* ─── Destination app name — Calendly when opened from Continue with Google ─── */
+    if (sessionStorage.getItem('googleContinueApp') === 'calendly') {
+      var continueAppBtn = document.getElementById('continueAppBtn');
+      if (continueAppBtn) continueAppBtn.textContent = 'Calendly';
+      document.querySelectorAll('[data-privacy-notice]').forEach(function (el) {
+        el.innerHTML =
+          'Before using this app, you can review Calendly\'s ' +
+          '<a href="https://calendly.com/privacy" target="_blank">Privacy Policy</a> ' +
+          'and ' +
+          '<a href="https://calendly.com/terms" target="_blank">Terms of Service</a>.';
+      });
+    }
 
     /* ─── Pre-fill email from sessionStorage ─── */
     var storedEmail = sessionStorage.getItem('lastLoginEmail') || '';

