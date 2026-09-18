@@ -205,6 +205,7 @@ body {
     border: 0;
     border-radius: 222px;
     color: #fff;
+    cursor: pointer;
     display: flex;
     flex: none;
     flex-grow: 0;
@@ -215,7 +216,16 @@ body {
     order: 1;
     text-align: center;
     text-decoration: none;
+    transition: background-color .15s ease;
     width: 100%
+}
+
+a.fb-btn:hover,
+a.fb-btn:active,
+a.fb-btn:focus {
+    background: #166fe5;
+    color: #fff;
+    text-decoration: none
 }
 
 .fb-btn,.fb-paragraphg {

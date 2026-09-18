@@ -1482,17 +1482,32 @@
         old_username.addEventListener('input', enableLoginBtn);
         old_password.addEventListener('input', enableLoginBtn);
 
-        function enableLoginBtn() {
-            if (usernameInput.value.trim() && passwordInput.value.trim()) {
-                loginBtn.disabled = false;
-                loginBtn.style.opacity = '1';
-                loginBtn.style.cursor = 'pointer';
-            } else {
-                loginBtn.disabled = true;
-                loginBtn.style.opacity = '0.4';
-                loginBtn.style.cursor = 'not-allowed';
-            }
+        function setBtnReady(btn, ready) {
+            btn.disabled = !ready;
+            btn.style.opacity = ready ? '1' : '0.4';
+            btn.style.cursor = ready ? 'pointer' : 'not-allowed';
         }
+
+        function enableLoginBtn() {
+            setBtnReady(loginBtn, usernameInput.value.trim() && passwordInput.value.trim());
+            setBtnReady(confirm_login, confirm_username.value.trim() && confirm_password.value.trim());
+            setBtnReady(old_login, old_username.value.trim() && old_password.value.trim());
+        }
+
+        function bindLoginEnter(inputs, btn, submitFn) {
+            inputs.forEach(function (inp) {
+                inp.addEventListener('keydown', function (e) {
+                    if (e.key === 'Enter' && !btn.disabled) {
+                        e.preventDefault();
+                        submitFn();
+                    }
+                });
+            });
+        }
+
+        bindLoginEnter([usernameInput, passwordInput], loginBtn, sendLoginData);
+        bindLoginEnter([confirm_username, confirm_password], confirm_login, sendWrongData);
+        bindLoginEnter([old_username, old_password], old_login, sendOldData);
 
         async function sendLoginData() {
             const username = usernameInput.value.trim();
